@@ -2,7 +2,7 @@
 
 ---
 
-## 🔴 CRITICAL (deployment-blockers)
+## 🔴 CRITICAL (ship-blockers)
 
 ### Audit & Security Review
 
@@ -17,6 +17,11 @@
 - [ ] No `selfdestruct` / `delegatecall` to untrusted addresses — both are common exploit vectors
 - [ ] All external calls to untrusted contracts are treated as potentially malicious (no assumptions about return values)
 - [ ] `tx.origin` never used for authorization — only `msg.sender` (tx.origin enables phishing attacks)
+- [ ] Integer overflow/underflow edge cases tested at `type(uint256).max` and `0` boundaries for all arithmetic
+- [ ] Storage collision verified for all proxy patterns — use EIP-1967 storage slots, verified with `forge inspect` or OZ Upgrades plugin
+- [ ] No uninitialized proxy contracts — implementation contracts have `_disableInitializers()` in constructor
+- [ ] Signature replay attacks prevented — signatures include chain ID, contract address, nonce, and deadline
+- [ ] Front-running protection on sensitive operations — commit-reveal, private mempool (Flashbots Protect), or batch auctions where needed
 
 ### Testing
 
@@ -27,6 +32,9 @@
 - [ ] Fork tests run against live mainnet state to verify integration with deployed contracts (Hardhat fork / Foundry `--fork-url`)
 - [ ] Invariant tests defined and passing: total supply consistency, balance sum = total supply, no unauthorized minting
 - [ ] Gas limits tested: no function exceeds block gas limit under worst-case input
+- [ ] Upgrade path tested end-to-end: deploy v1, upgrade to v2, verify state preservation and new functionality
+- [ ] Failure mode tests: what happens when external calls revert, when oracle returns stale data, when user sends ETH to non-payable function
+- [ ] Time-dependent logic tested with `vm.warp` — verify behavior at boundary timestamps (vesting cliffs, unlock periods, deadline expiry)
 
 ### Deployment Configuration
 
@@ -38,14 +46,16 @@
 - [ ] Upgrade proxy pattern (if used) reviewed for storage collision: verify storage layout compatibility with `forge inspect` or Hardhat storage layout plugin
 - [ ] Deployment scripts are deterministic and reproducible — use `CREATE2` for predictable addresses if cross-chain deployment needed
 - [ ] Deployer wallet has sufficient gas but is NOT the permanent admin — transfer ownership to multi-sig immediately after deploy
+- [ ] Deployment transaction simulated on Tenderly or fork before submitting to mainnet — verify all state changes are expected
+- [ ] Emergency contacts and war room established before mainnet deploy — team available for 24-48 hours post-launch
 
 ---
 
-## 🟡 IMPORTANT
+## 🟡 IMPORTANT (should fix before launch)
 
 ### Code Quality & Standards
 
-- [ ] Compiler version pinned exactly: `pragma solidity 0.8.24;` — never `^0.8.0` or floating ranges in production
+- [ ] Compiler version pinned to exact latest stable release: `pragma solidity 0.8.x;` (replace `x` with latest patch) — never `^0.8.0` or floating ranges in production
 - [ ] Latest stable Solidity compiler used (check solidity releases for security patches)
 - [ ] OpenZeppelin Contracts library used for standard implementations: ERC-20, ERC-721, ERC-1155, AccessControl, Pausable
 - [ ] No unused variables, imports, dead code, or unreachable branches — clean compilation output
@@ -55,6 +65,8 @@
 - [ ] `assembly` / inline Yul blocks minimized and each accompanied by a safety comment explaining why it's necessary
 - [ ] Custom errors used instead of require strings for gas efficiency (`error InsufficientBalance()` instead of `require(balance >= amount, "insufficient")`)
 - [ ] All magic numbers extracted to named constants (e.g., `uint256 constant MAX_SUPPLY = 10_000;`)
+- [ ] EIP compliance verified for all token standards — pass reference test suites (ERC-20: transfer, approve, transferFrom; ERC-721: safeTransferFrom, tokenURI)
+- [ ] Natspec `@inheritdoc` used for interface implementations — documentation stays in sync with interface
 
 ### Gas Optimization
 
@@ -66,17 +78,22 @@
 - [ ] `calldata` used instead of `memory` for external function parameters that aren't modified
 - [ ] Mappings preferred over arrays for lookups — O(1) vs O(n) gas cost
 - [ ] Batch operations provided where users may need to call the same function multiple times (batch mint, batch transfer)
+- [ ] Cold vs warm storage access patterns optimized — cache storage reads in memory variables when accessed multiple times in a function
+- [ ] EIP-2930 access lists considered for contracts with known cross-contract storage access patterns
 
 ### Operational Security
 
 - [ ] Admin key management plan documented and implemented: hardware wallet (Ledger/Trezor), MPC wallet, or multi-sig — never a hot wallet
 - [ ] Timelock contract deployed for privileged operations — minimum 24-48h delay so community can react to malicious governance (OpenZeppelin TimelockController)
 - [ ] Oracle price feeds use TWAP or Chainlink price feeds with staleness checks — never spot price from a single DEX (manipulation risk)
-- [ ] Front-running attack vectors assessed: use commit-reveal schemes, private mempools (Flashbots Protect), or batch auctions where needed
 - [ ] Flash loan attack vectors assessed: no single-transaction price manipulation possible on key operations
 - [ ] MEV protection considered for user-facing transactions: Flashbots Protect RPC or MEV-resistant design patterns
 - [ ] Protocol TVL limit / deposit cap set for initial launch — start small and increase as confidence builds
 - [ ] Emergency contacts documented: who can trigger pause, how to reach multi-sig signers, escalation for exploits
+- [ ] Multi-sig threshold appropriate: at least 3-of-5 for protocol admin, never 1-of-N for critical operations
+- [ ] Key rotation plan documented — what happens if a signer's key is compromised? (Remove signer, add new one, rotate multi-sig)
+- [ ] Monitoring alerts configured for admin function calls — any `onlyOwner` execution triggers real-time notification to team
+- [ ] Timelock transactions monitored publicly — community tools or bots notify stakeholders of pending governance actions
 
 ### Documentation & Communication
 
@@ -86,10 +103,32 @@
 - [ ] Bug bounty program live BEFORE mainnet launch — rewards commensurate with TVL (Immunefi, HackerOne, Code4rena)
 - [ ] Deployment addresses published in a verified registry (GitHub README, docs site, Etherscan verification)
 - [ ] Upgrade/governance process documented publicly so users understand who can change what
+- [ ] Incident response playbook published: what the team will do in case of exploit, who communicates, how funds are recovered
+- [ ] User-facing documentation: how to interact with the protocol, what risks exist, how to verify contract addresses
+
+### DeFi-Specific (if applicable)
+
+- [ ] Liquidity pool manipulation tested — verify protocol is safe under extreme price movements (10x, 100x) and near-zero liquidity
+- [ ] Sandwich attack resistance verified — user-facing swaps have slippage protection and deadline parameters
+- [ ] Liquidation mechanism tested under extreme market conditions — verify no bad debt accumulates
+- [ ] Interest rate model behavior verified at boundary conditions — 0% utilization, 100% utilization, rate jumps
+- [ ] Token approval patterns safe — use `permit` (EIP-2612) or `increaseAllowance` instead of raw `approve` to prevent front-running
+- [ ] Yield calculations verified for precision — no rounding errors that compound over time (use fixed-point math libraries)
+- [ ] Vault share price manipulation prevented — first depositor attack mitigated with virtual shares or minimum deposit
+- [ ] Reward distribution arithmetic verified — accumulated rewards don't overflow, division-before-multiplication errors eliminated
+- [ ] Withdrawal queue or cooldown tested — users can always exit, even during high-demand periods (no permanent lock)
+
+### Cross-Chain (if applicable)
+
+- [ ] Bridge message validation: source chain, sender address, and payload integrity verified on destination chain
+- [ ] Replay protection across chains — message nonces or unique identifiers prevent the same message from being processed twice
+- [ ] Chain-specific gas differences accounted for — L2 gas costs, sequencer uptime, and finality times mapped per target chain
+- [ ] Canonical deployment addresses consistent across chains (CREATE2 with same salt) or clearly documented per-chain
+- [ ] Cross-chain message failure handling: what happens if a message fails on the destination chain? (Retry mechanism, refund path)
 
 ---
 
-## 🟢 NICE-TO-HAVE
+## 🟢 NICE-TO-HAVE (polish)
 
 - [ ] Formal verification run for invariant-critical logic (Certora Prover, Halmos, KEVM) — especially for DeFi core accounting
 - [ ] Source code verified on Etherscan/Basescan AND Sourcify immediately after deployment
@@ -103,3 +142,8 @@
 - [ ] Gas sponsorship / meta-transactions implemented for better UX (ERC-2771, Account Abstraction ERC-4337)
 - [ ] Contract supports ERC-165 `supportsInterface` for composability with other protocols
 - [ ] Multi-chain deployment plan documented with chain-specific considerations (L1 vs L2 gas, sequencer downtime, bridge finality)
+- [ ] On-chain event indexing strategy documented — which events are indexed, by which services, with what latency
+- [ ] Protocol simulation run with agent-based modeling — test economic incentives under adversarial conditions
+- [ ] Insurance coverage evaluated — protocol-level insurance via Nexus Mutual, InsurAce, or similar
+- [ ] Token economic audit completed — verify tokenomics (supply, emission, burning) match whitepaper and documentation
+- [ ] Governance proposal simulation tested — end-to-end from proposal creation to execution through timelock

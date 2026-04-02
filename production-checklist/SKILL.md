@@ -1,98 +1,124 @@
 ---
 name: production-checklist
 description: >
-  Run a structured production readiness checklist before deploying. Use this skill
-  whenever the user says "ready to deploy", "going to prod", "shipping", "launching",
-  "submitting to App Store / Play Store", "deploying my contract", "pushing to production",
-  or asks if their app / API / contract is production-ready. Supports web frontends,
-  mobile apps (iOS & Android), backend APIs, and smart contracts. Always trigger this
-  skill before any deployment decision — it is fast, tiered by severity, and saves
-  developers from costly post-launch fires.
+  Scan the current codebase for production readiness. Triggers on: "ready to deploy",
+  "going to prod", "shipping", "launching", "preflight", "production checklist",
+  "App Store", "Play Store", "mainnet", "production-ready", or "/production-checklist".
+  Auto-detects stack, scans code for issues, and produces a pass/fail report with fixes.
 ---
 
-# Production Checklist
+<!-- Last reviewed: 2026-04-02 | Standards: PCI DSS v4.0, OWASP ASVS v5.0, WCAG 2.2, Google SRE PRR -->
 
-You are a production readiness advisor. Your job is to walk the developer through a comprehensive, tiered production checklist before they ship. Follow these steps exactly.
+# Production Checklist — Automated Codebase Scan
 
-## Step 1 — Detect Deployment Type
+You are a production readiness scanner. On trigger, you scan the codebase and produce a detailed report. Do NOT ask the user to confirm items manually — you verify everything you can from code.
 
-Determine the deployment type from conversation context using these signals:
+## Step 1 — Detect Stack from Files
 
-| Signal keywords | Type |
-|----------------|------|
-| Next.js, React, Vue, Svelte, Astro, HTML, Vercel, Netlify, Cloudflare Pages, frontend, website, web app, SPA, SSR, static site | `web` |
-| iOS, Android, React Native, Expo, App Store, Play Store, Flutter, SwiftUI, Kotlin, mobile app, TestFlight, APK, AAB | `mobile` |
-| API, Express, Fastify, NestJS, Django, FastAPI, Flask, Rails, Laravel, GraphQL, REST, gRPC, backend, microservice, server, endpoint | `api` |
-| Solidity, contract, deploy to mainnet, Base, Ethereum, Polygon, Arbitrum, Optimism, DeFi, ERC-20, ERC-721, Foundry, Hardhat | `smart-contract` |
+Glob the project root. Detect all applicable types from file presence:
 
-**Multiple types detected?** If the project spans multiple types (e.g., a full-stack app with a React frontend and Express API), run checklists for each detected type sequentially. Confirm with the user: *"I detected both a web frontend and a backend API. I'll run both checklists — starting with web."*
+| Files found | Type |
+|------------|------|
+| `package.json` with React/Vue/Svelte/Next/Nuxt/Astro, `vite.config.*`, `next.config.*` | `web` |
+| `Podfile`, `*.xcodeproj`, `build.gradle*`, `AndroidManifest.xml`, `pubspec.yaml` | `mobile` |
+| `server.*`, `app.*`, `manage.py`, `go.mod`, `Gemfile`, `pom.xml`, route handlers | `api` |
+| `*.sol`, `foundry.toml`, `hardhat.config.*` | `smart-contract` |
+| Stripe/PayPal/Braintree/Adyen in dependencies or imports | `payment` |
+| `*.tf`, `Dockerfile`, `k8s/`, `helm/`, `.github/workflows/*`, `pulumi/` | `infrastructure` |
 
-**No signals / ambiguous?** Ask the user once:
+Tag ALL that apply. Only ask user if truly ambiguous.
 
-> What are you deploying?
-> 1. Web app (frontend / full-stack website)
-> 2. Mobile app (iOS, Android, or cross-platform)
-> 3. Backend API (REST, GraphQL, microservices)
-> 4. Smart contract (Solidity / EVM)
-> 5. Multiple — tell me which combination
+## Step 2 — Load Reference Checklist
 
-## Step 2 — Load Reference File
-
-Read the matching reference file from the `references/` directory adjacent to this skill file:
+Read from `references/` adjacent to this file. **Only load files matching detected types:**
 
 - `web` → `references/web.md`
 - `mobile` → `references/mobile.md`
 - `api` → `references/api.md`
 - `smart-contract` → `references/smart-contract.md`
+- `payment` → `references/payment.md`
+- `infrastructure` → `references/infrastructure.md`
 
-Read ONLY the relevant file(s) — do not load all four.
+**Deduplication**: When loading multiple reference files, some items overlap (e.g., PCI DSS requirements appear in both `web.md` and `payment.md`). Deduplicate — report each unique item only once. If a check appears in both files, use the more specific version.
 
-## Step 3 — Present the Checklist
+## Step 3 — Scan and Verify
 
-Present the checklist grouped by severity tier: 🔴 Critical first, then 🟡 Important, then 🟢 Nice-to-have.
+For each checklist item, use Glob, Grep, and Read to verify against actual code. Be targeted:
 
-**Stack-aware filtering:** Skip items that are clearly irrelevant to the user's stack. Examples:
-- Skip Redis/caching items if they mentioned a simple static site
-- Skip iOS-specific items if they said "Android only"
-- Skip GraphQL items for a REST API
-- Skip Oracle/DeFi items for a simple NFT mint contract
+- **Grep** for specific patterns (secrets, `console.log`, `localStorage`, CORS `*`, missing headers)
+- **Read** config files (`package.json`, `Dockerfile`, `.gitignore`, CI configs, nginx/server configs)
+- **Glob** for file existence (tests, CI pipelines, error pages, health endpoints)
 
-**Presentation format:** Present each tier as a numbered list so the user can respond by number. After each tier, pause and ask the developer to mark which items pass (✅) and which fail (❌). Do NOT dump the entire checklist at once — go tier by tier.
+Mark each item:
+- ✅ **PASS** — verified from code (cite `file:line`)
+- ❌ **FAIL** — violation found (cite `file:line`) or required thing is missing
+- ⚠️ **MANUAL** — cannot verify from code (DNS, external service config, store listings)
 
-## Step 4 — Produce a Scorecard
+**Skip items irrelevant to the detected stack.** Filter aggressively — a React SPA doesn't need Kubernetes checks.
 
-After all tiers are reviewed, produce a scorecard in this exact format:
+## Step 4 — Produce Report
 
-```
-Production Readiness Score
-══════════════════════════
-✅ Critical:     X/Y passed
-⚠️  Important:   X/Y passed
-💡 Nice-to-have: X/Y passed
-
-VERDICT: ✅ READY — all critical items passed
-```
-
-OR if any critical item fails:
+Output a single, comprehensive report:
 
 ```
-VERDICT: ⚠️ NOT READY — N critical items unresolved
+╔══════════════════════════════════════╗
+║   PRODUCTION READINESS SCAN REPORT  ║
+╚══════════════════════════════════════╝
 
-Blockers:
-1. [failing critical item]
-2. [failing critical item]
+Stack detected: web (Next.js), api (Express), infrastructure (Docker)
+Files scanned: N
+
+🔴 CRITICAL
+───────────
+1. ❌ FAIL — Hardcoded API key in source code
+   src/config.ts:14 → const API_KEY = "sk_live_..."
+   Fix: Move to .env, add .env* to .gitignore
+
+2. ✅ PASS — HTTPS enforced
+   nginx.conf:3 → redirect 301 https://...
+
+3. ⚠️ MANUAL — SSL certificate auto-renewal
+   Cannot verify from code — check your hosting provider
+
+🟡 IMPORTANT
+────────────
+[same format]
+
+🟢 NICE-TO-HAVE
+────────────────
+[same format]
+
+╔══════════════════════════════════════╗
+║            SCORECARD                 ║
+╠══════════════════════════════════════╣
+║ 🔴 Critical:     12/15 passed       ║
+║ 🟡 Important:    18/25 passed       ║
+║ 🟢 Nice-to-have:  4/10 passed       ║
+╠══════════════════════════════════════╣
+║ VERDICT: ⚠️ NOT READY                ║
+║ 3 critical blockers must be fixed   ║
+╚══════════════════════════════════════╝
+
+BLOCKERS:
+1. ❌ Hardcoded API key → src/config.ts:14
+2. ❌ No rate limiting → no middleware found
+3. ❌ No error tracking → sentry/datadog not in dependencies
+
+Want me to fix these? I can:
+• Fix all 3 critical issues now
+• Fix a specific one (pick a number)
+• Show details for any item
 ```
 
-## Step 5 — Offer Fixes
+## Step 5 — Fix on Request
 
-If any 🔴 Critical items failed, proactively offer to generate specific fix guidance, code snippets, or configuration examples for each failing item. Be concrete — show the actual config, not just "go configure it."
+When the user asks to fix items, apply actual code changes using Edit/Write. Be concrete — write the real config, middleware, or dependency addition. Don't just describe what to do.
 
-If only 🟡 Important items failed, note them as recommendations and offer help if the developer wants to address them before launch.
+## Scan Efficiency Rules
 
-## Severity Tier Definitions
-
-| Tier | Emoji | Meaning | Action required |
-|------|-------|---------|----------------|
-| Critical | 🔴 | Ship-blocker. Causes data loss, security breach, app store rejection, financial loss, or legal liability if missed | Must pass before deploy |
-| Important | 🟡 | Significantly degrades UX, SEO, performance, or operational confidence. Will cause pain within the first week | Should pass; document risk if skipping |
-| Nice-to-have | 🟢 | Industry best practice. Meaningful quality improvement but not launch-blocking | Address in next sprint |
+1. **Structure first**: Glob the tree, read manifests — understand the project before deep scanning
+2. **Targeted greps**: Search for specific patterns per checklist item, don't read every file
+3. **Skip irrelevant types**: No Dockerfile? Skip all container items. No `*.sol`? Skip smart contract.
+4. **Batch the report**: Collect all findings, output once — no streaming item-by-item
+5. **Prioritize 🔴 Critical**: Spend most effort here — these are the ship-blockers
+6. **Cite evidence**: Every PASS/FAIL should reference a file path. This builds trust in the report.

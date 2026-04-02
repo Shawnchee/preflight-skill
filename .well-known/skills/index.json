@@ -2,7 +2,7 @@
   "skills": [
     {
       "name": "production-checklist",
-      "description": "Run a structured production readiness checklist before deploying. Supports web frontends, mobile apps, backend APIs, and smart contracts.",
+      "description": "Scan your codebase for production readiness. Auto-detects stack and checks 784 items across web, mobile, API, smart contract, payment, and infrastructure. Produces a pass/fail report with fixes.",
       "path": "production-checklist/SKILL.md"
     }
   ]
