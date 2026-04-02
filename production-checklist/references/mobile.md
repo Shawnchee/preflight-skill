@@ -2,7 +2,7 @@
 
 ---
 
-## 🔴 CRITICAL
+## 🔴 CRITICAL (ship-blockers)
 
 ### App Store / Play Store Compliance
 
@@ -52,7 +52,7 @@
 
 ---
 
-## 🟡 IMPORTANT
+## 🟡 IMPORTANT (should fix before launch)
 
 ### Testing
 
@@ -140,7 +140,7 @@
 
 ---
 
-## 🟢 NICE-TO-HAVE
+## 🟢 NICE-TO-HAVE (polish)
 
 - [ ] App Clip (iOS) or Instant App (Android) configured for lightweight trial experience without full install
 - [ ] Localization for target markets: all user-facing strings externalized in `.strings` / `strings.xml` / ARB files

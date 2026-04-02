@@ -11,19 +11,19 @@
 - [ ] Content Security Policy (CSP) headers configured (start with `Content-Security-Policy: default-src 'self'` and expand per resource)
 - [ ] Security headers set: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Strict-Transport-Security: max-age=31536000; includeSubDomains`
 - [ ] No hardcoded API keys, secrets, or tokens in client-side code (search codebase for `sk_`, `api_key`, `secret`, `password`)
-- [ ] Authentication tokens stored in `httpOnly` secure cookies — NOT localStorage or sessionStorage (XSS can steal localStorage)
+- [ ] Authentication tokens stored in `httpOnly` secure cookies — NOT localStorage or sessionStorage (XSS can steal localStorage; if cookies are not feasible for your SPA architecture, use short-lived tokens with refresh token rotation)
 - [ ] CORS restricted to known origins — never `Access-Control-Allow-Origin: *` in production (set explicit domain allowlist)
 - [ ] Rate limiting enabled on all public-facing form submissions and API routes (use middleware like `express-rate-limit` or Cloudflare rules)
 - [ ] SSL/TLS certificate is valid and auto-renews (check expiry date; use Let's Encrypt or your host's managed certs)
 - [ ] No sensitive data exposed in URL query parameters (tokens, emails, passwords must go in request body or headers)
-- [ ] Subresource Integrity (SRI) hashes set on third-party `<script>` and `<link>` tags (add `integrity` attribute)
+- [ ] Subresource Integrity (SRI) hashes set on third-party `<script>` and `<link>` tags if loading from CDNs (add `integrity` attribute)
 - [ ] `Referrer-Policy` header set to `strict-origin-when-cross-origin` or stricter
 - [ ] `Permissions-Policy` header configured to disable unused browser features (`camera`, `microphone`, `geolocation`, `payment` — deny what you don't need)
 - [ ] All user-generated content sanitized before rendering — use DOMPurify or framework-native sanitization to prevent stored XSS
 - [ ] No `eval()`, `innerHTML`, or `document.write()` with user-controlled data (use `textContent` or framework bindings)
 - [ ] CSP `script-src` does NOT include `'unsafe-inline'` or `'unsafe-eval'` in production (use nonces or hashes instead)
-- [ ] All third-party scripts inventoried and authorized — PCI DSS 4.0 requirement 6.4.3 for payment pages (maintain a script inventory with integrity checks)
-- [ ] Payment page scripts monitored for unauthorized changes — PCI DSS 4.0 requirement 11.6.1 (use CSP reporting or a client-side security tool)
+- [ ] All third-party scripts on payment pages inventoried and authorized — PCI DSS 4.0 requirement 6.4.3 (maintain a script inventory with integrity checks)
+- [ ] Payment page changes detected in real-time — PCI DSS 4.0 requirement 11.6.1 (use CSP reporting or a client-side security tool like Feroot/c/side)
 - [ ] Session fixation prevented — regenerate session ID on login and privilege escalation
 - [ ] Clickjacking protection verified — `X-Frame-Options: DENY` and CSP `frame-ancestors 'none'` both set
 
@@ -87,7 +87,7 @@
 - [ ] Structured data (JSON-LD) on key pages — at minimum: Organization, WebSite, BreadcrumbList (validate with Google Rich Results Test)
 - [ ] All pages are server-rendered or pre-rendered for SEO-critical content (SPAs need SSR/SSG for crawlability)
 - [ ] `<html lang="...">` attribute set correctly for primary language
-- [ ] Pagination pages use `rel="next"` / `rel="prev"` and canonical URLs correctly
+- [ ] Paginated content uses canonical URLs pointing to the preferred page (note: Google no longer uses `rel="next"`/`rel="prev"` as ranking signals)
 - [ ] 301 redirects configured for all old URLs if migrating from a previous site (preserve SEO equity)
 
 ### Accessibility
@@ -153,7 +153,7 @@
 
 - [ ] Payment forms use PCI-compliant hosted fields or iframes (Stripe Elements, Braintree Drop-in, Adyen Web Components) — never collect raw card numbers in your own forms
 - [ ] Payment page served over HTTPS with valid TLS 1.2+ — no mixed content allowed on checkout pages
-- [ ] All scripts on payment pages inventoried and integrity-verified per PCI DSS 4.0 requirement 6.4.3
+- [ ] Payment page script integrity verified — ensure no unauthorized scripts load on checkout (complement the CRITICAL-tier PCI DSS 6.4.3 requirement with automated monitoring)
 - [ ] Payment confirmation page shows transaction ID, amount, and clear success/failure status
 - [ ] Double-submit prevention on payment buttons — disable button after click, use idempotency keys
 - [ ] Failed payment UX is clear — show specific error messages (card declined, insufficient funds, expired card) not generic errors
@@ -177,10 +177,10 @@
 - [ ] Adblocker compatibility tested — critical features not broken by common adblockers
 - [ ] 404 page includes search or suggested links to reduce bounce rate
 - [ ] Proper `Cache-Control` for HTML pages (`no-cache` or short TTL to ensure fresh deploys are picked up)
-- [ ] Social share preview tested with actual URLs (use opengraph.xyz or Twitter Card Validator)
+- [ ] Social share preview tested with actual URLs (use opengraph.xyz or metatags.io)
 - [ ] RSS feed available for blog/content sites
 - [ ] Web app handles deep links / direct URL access correctly (no blank pages on refresh for SPAs)
-- [ ] Feature flags integrated for safe rollouts and instant kill switches (LaunchDarkly, Flagsmith, Unleash, or config-based)
+- [ ] Client-side feature flags integrated for safe UI rollouts and instant kill switches (LaunchDarkly, Flagsmith, Unleash, or config-based)
 - [ ] A/B testing infrastructure in place for conversion-critical pages (Optimizely, PostHog, GrowthBook)
 - [ ] `prefers-color-scheme` media query supported for dark mode (or manual toggle provided)
 - [ ] `prefers-contrast` media query respected for high-contrast mode users

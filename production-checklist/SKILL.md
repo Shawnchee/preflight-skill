@@ -7,6 +7,8 @@ description: >
   Auto-detects stack, scans code for issues, and produces a pass/fail report with fixes.
 ---
 
+<!-- Last reviewed: 2026-04-02 | Standards: PCI DSS v4.0, OWASP ASVS v5.0, WCAG 2.2, Google SRE PRR -->
+
 # Production Checklist — Automated Codebase Scan
 
 You are a production readiness scanner. On trigger, you scan the codebase and produce a detailed report. Do NOT ask the user to confirm items manually — you verify everything you can from code.
@@ -36,6 +38,8 @@ Read from `references/` adjacent to this file. **Only load files matching detect
 - `smart-contract` → `references/smart-contract.md`
 - `payment` → `references/payment.md`
 - `infrastructure` → `references/infrastructure.md`
+
+**Deduplication**: When loading multiple reference files, some items overlap (e.g., PCI DSS requirements appear in both `web.md` and `payment.md`). Deduplicate — report each unique item only once. If a check appears in both files, use the more specific version.
 
 ## Step 3 — Scan and Verify
 

@@ -2,7 +2,7 @@
 
 ---
 
-## 🔴 CRITICAL
+## 🔴 CRITICAL (ship-blockers)
 
 ### Authentication & Authorization
 
@@ -68,7 +68,7 @@
 
 ---
 
-## 🟡 IMPORTANT
+## 🟡 IMPORTANT (should fix before launch)
 
 ### Observability & Monitoring
 
@@ -106,7 +106,7 @@
 ### Reliability & Resilience
 
 - [ ] Graceful shutdown handling: drain in-flight requests on SIGTERM, close database connections cleanly (critical for zero-downtime deploys)
-- [ ] Retry logic with exponential backoff and jitter for external service calls — never retry on 4xx client errors
+- [ ] Retry logic with exponential backoff and jitter for external service calls — never retry on 4xx client errors except 429 Too Many Requests (which should be retried after `Retry-After` delay)
 - [ ] Circuit breaker pattern implemented for critical external dependencies (prevent cascade failures)
 - [ ] Database migration rollback tested — can you reverse the latest migration without data loss?
 - [ ] Automated database backup schedule configured and restore procedure tested at least once (verify backups are not corrupted)
@@ -142,7 +142,7 @@
 - [ ] Incident response plan documented: who gets paged, escalation path, communication channel, postmortem process
 - [ ] Service ownership documented: team name, Slack channel, PagerDuty policy, repo link
 - [ ] API changelog maintained for breaking changes — consumers know what changed and when
-- [ ] Architecture decision records (ADRs) maintained for significant technical decisions (why, alternatives considered, trade-offs)
+- [ ] Architecture decision records (ADRs) maintained for significant technical decisions (why, alternatives considered, trade-offs) — especially for data store choices, protocol decisions, and security architecture
 - [ ] Dependency map documented — all upstream and downstream services, databases, queues, and third-party APIs visualized
 - [ ] Capacity planning reviewed — current resource utilization documented with projections for 6-12 months growth
 - [ ] Postmortem template and process defined — blameless postmortems required for all SEV1/SEV2 incidents within 48 hours
@@ -177,11 +177,11 @@
 
 ---
 
-## 🟢 NICE-TO-HAVE
+## 🟢 NICE-TO-HAVE (polish)
 
 - [ ] API versioning strategy implemented and documented (`/v1/`, header-based, or query param — pick one and be consistent)
 - [ ] Canary deployment or blue-green deployment configured for zero-downtime releases
-- [ ] Feature flags integrated for safe rollouts and instant kill switches (LaunchDarkly, Flagsmith, Unleash, or config-based)
+- [ ] Server-side feature flags integrated for safe rollouts and instant kill switches (LaunchDarkly, Flagsmith, Unleash, or config-based)
 - [ ] Idempotency keys supported on all mutation endpoints (not just payments — any POST that creates resources)
 - [ ] Webhook delivery includes retry with exponential backoff and HMAC signature verification for consumers
 - [ ] Shadow traffic / traffic replay testing (GoReplay) run before major refactors to compare old vs new behavior

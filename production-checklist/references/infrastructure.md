@@ -20,7 +20,7 @@
 - [ ] Container images use minimal base images (distroless, Alpine, or scratch) — no full OS distributions in production
 - [ ] Container images scanned for vulnerabilities in CI pipeline (Trivy, Snyk, Grype) — zero critical/high CVEs before deploy
 - [ ] Container images are immutable and tagged with Git SHA — no `latest` tag in production deployments
-- [ ] Resource requests and limits set on all containers: CPU requests (not limits) and memory requests + limits defined
+- [ ] Resource requests and limits set on all containers: CPU and memory requests defined, memory limits set (CPU limits are optional — omitting them avoids throttling, but set them if you need predictable multi-tenant isolation)
 - [ ] Pod disruption budgets (PDB) configured for all production workloads — ensure minimum available replicas during node maintenance
 - [ ] Horizontal Pod Autoscaler (HPA) configured and tested: scales out under load, scales in during low traffic (verify both directions)
 - [ ] Liveness and readiness probes configured on all containers — readiness includes dependency health checks

@@ -2,7 +2,7 @@
 
 ---
 
-## 🔴 CRITICAL (deployment-blockers)
+## 🔴 CRITICAL (ship-blockers)
 
 ### Audit & Security Review
 
@@ -51,11 +51,11 @@
 
 ---
 
-## 🟡 IMPORTANT
+## 🟡 IMPORTANT (should fix before launch)
 
 ### Code Quality & Standards
 
-- [ ] Compiler version pinned exactly: `pragma solidity 0.8.24;` — never `^0.8.0` or floating ranges in production
+- [ ] Compiler version pinned to exact latest stable release: `pragma solidity 0.8.x;` (replace `x` with latest patch) — never `^0.8.0` or floating ranges in production
 - [ ] Latest stable Solidity compiler used (check solidity releases for security patches)
 - [ ] OpenZeppelin Contracts library used for standard implementations: ERC-20, ERC-721, ERC-1155, AccessControl, Pausable
 - [ ] No unused variables, imports, dead code, or unreachable branches — clean compilation output
@@ -128,7 +128,7 @@
 
 ---
 
-## 🟢 NICE-TO-HAVE
+## 🟢 NICE-TO-HAVE (polish)
 
 - [ ] Formal verification run for invariant-critical logic (Certora Prover, Halmos, KEVM) — especially for DeFi core accounting
 - [ ] Source code verified on Etherscan/Basescan AND Sourcify immediately after deployment
