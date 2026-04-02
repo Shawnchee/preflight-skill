@@ -1,0 +1,13 @@
+{
+  "name": "production-checklist-plugin",
+  "description": "Production readiness checklists for web, mobile, API, and smart contract deployments",
+  "version": "1.0.0",
+  "author": "byshawnchee",
+  "license": "MIT",
+  "skills": [
+    {
+      "name": "production-checklist",
+      "path": "production-checklist"
+    }
+  ]
+}

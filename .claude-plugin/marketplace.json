@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "name": "Production Checklist",
+    "description": "Ship confidently — tiered production readiness checklists for web, mobile (iOS + Android), backend API, and Solidity smart contracts.",
+    "author": "byshawnchee",
+    "repository": "https://github.com/byshawnchee/production-checklist-skill"
+  },
+  "plugins": [
+    {
+      "name": "production-checklist-plugin",
+      "description": "Run a pre-deployment production readiness check tailored to your deployment type.",
+      "path": ".",
+      "version": "1.0.0"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "skills": [
+    {
+      "name": "production-checklist",
+      "description": "Run a structured production readiness checklist before deploying. Supports web frontends, mobile apps, backend APIs, and smart contracts.",
+      "path": "production-checklist/SKILL.md"
+    }
+  ]
+}
