@@ -18,6 +18,8 @@
 - [ ] Login with Apple implemented if app offers any third-party social login (Apple requirement since 2020)
 - [ ] App does not crash on launch or during primary flow — test the exact binary being submitted, not a debug build
 - [ ] No placeholder content, test data, or "lorem ipsum" visible anywhere in the app
+- [ ] EU Digital Markets Act (DMA) compliance: alternative payment options and sideloading disclosures if distributing in the EU (iOS 17.4+)
+- [ ] App content rating accurate and matches store questionnaire responses — incorrect rating leads to removal
 
 ### Code Signing & Build Configuration
 
@@ -28,6 +30,8 @@
 - [ ] Release build tested on physical devices — not just emulator/simulator (test on oldest supported device you own)
 - [ ] ProGuard / R8 code shrinking enabled for Android release builds (minifyEnabled true) — test that obfuscation doesn't break reflection/serialization
 - [ ] Bitcode, dSYM, or debug symbols uploaded for crash symbolication (or configured to auto-upload via Crashlytics/Sentry)
+- [ ] CI/CD pipeline builds, signs, and distributes the release binary — no manual builds from developer machines
+- [ ] Build reproducibility verified — same commit produces same binary (pin dependency versions, lock files committed)
 
 ### Security
 
@@ -38,6 +42,13 @@
 - [ ] Jailbreak/root detection implemented if app handles payments, banking, or sensitive health/financial data
 - [ ] Sensitive screens disable screenshots/screen recording where required (iOS: window overlay; Android: `FLAG_SECURE`)
 - [ ] Biometric authentication (Face ID/Touch ID, Android BiometricPrompt) used for sensitive actions if applicable
+- [ ] No sensitive data written to application logs — `NSLog` / `Log.d` must never contain tokens, passwords, PII
+- [ ] Local database (SQLite, Realm, Core Data) encrypted if storing sensitive user data (SQLCipher, Realm encryption)
+- [ ] Clipboard cleared after sensitive copy operations (e.g., OTP codes) — `UIPasteboard.general.setItems([], options: [.expirationDate: Date()])`)
+- [ ] Binary is obfuscated — reverse engineering of app logic is not trivially easy (iOS: Swift obfuscation; Android: R8 with proguard-rules)
+- [ ] Deep link handlers validate all parameters — no injection attacks via `myapp://path?param=malicious_value`
+- [ ] WebView content is sandboxed — `WKWebView` with `javaScriptEnabled: false` where not needed, no `evaluateJavaScript` with user input
+- [ ] Network security config (Android) restricts cleartext traffic and pins certificates for production domains
 
 ---
 
@@ -57,6 +68,10 @@
 - [ ] Accessibility tested: VoiceOver (iOS) and TalkBack (Android) can navigate all primary flows
 - [ ] Landscape orientation handled or explicitly locked to portrait (no half-rendered layouts)
 - [ ] Force-kill and relaunch: app recovers state correctly, no data loss for in-progress work
+- [ ] Concurrent session handling tested — what happens when user logs in on a second device? (session invalidation, data sync)
+- [ ] Time zone and locale changes tested — app handles users traveling across time zones without data corruption
+- [ ] Large data set handling tested — lists with 10,000+ items scroll smoothly (virtual list / recycler view implemented)
+- [ ] App behavior tested when storage is nearly full — handle write failures gracefully, not crash
 
 ### Store Listing & ASO (App Store Optimization)
 
@@ -81,6 +96,10 @@
 - [ ] Memory usage stays under 200MB during normal use (monitor for leaks with Instruments / LeakCanary)
 - [ ] Network requests are efficient: batch where possible, paginate lists, compress payloads (gzip/brotli)
 - [ ] Images and assets loaded at appropriate resolution for device screen density (@2x/@3x; mdpi through xxxhdpi)
+- [ ] ANR (Application Not Responding) rate monitored on Android — keep below 0.47% (Play Console vitals threshold)
+- [ ] Startup trace captured — no blocking I/O on main thread during app launch (use async init, lazy loading)
+- [ ] Render performance profiled — UI runs at 60fps, no jank during scrolling or animations (use GPU profiler)
+- [ ] Background fetch and sync optimized — respect system-imposed limits (iOS Background App Refresh, Android WorkManager constraints)
 
 ### Compliance & Legal
 
@@ -92,6 +111,32 @@
 - [ ] Account deletion feature available if app offers account creation (Apple hard requirement; Google Play policy)
 - [ ] Children's/COPPA compliance reviewed if app could attract under-13 users (age gate, restricted data collection)
 - [ ] Data retention and deletion policies documented — user data is deletable upon request
+- [ ] Third-party SDK privacy policies reviewed — ensure every SDK included is compliant with your privacy commitments
+- [ ] Data collection consent granular — users can opt in/out of specific data categories (analytics, crash reports, personalization)
+- [ ] Health data handling compliant if applicable (Apple HealthKit guidelines, HIPAA for US health apps)
+
+### Payments & In-App Purchases (if applicable)
+
+- [ ] In-app purchase products created and approved in App Store Connect / Play Console (subscription or consumable)
+- [ ] Purchase flow handles all StoreKit 2 / Google Billing Library edge cases: pending transactions, deferred purchases, family sharing
+- [ ] Receipt validation performed server-side — never trust client-side receipt validation (trivially bypassable)
+- [ ] Subscription status synced with server — handle renewals, cancellations, grace periods, billing retry
+- [ ] Restore purchases flow works correctly — users who reinstall or switch devices can recover their purchases
+- [ ] Free trial and introductory offer terms clearly displayed before purchase (App Store requirement)
+- [ ] Subscription management link provided — users can easily find where to cancel (required by both platforms)
+- [ ] Refund handling implemented — server is notified of App Store/Play Store refunds and revokes access appropriately
+- [ ] Price localization configured — prices set per region in store dashboard (not converted at runtime)
+- [ ] Entitlement checks use server-side truth — don't rely solely on cached purchase state on device
+
+### Accessibility (a11y)
+
+- [ ] VoiceOver (iOS) and TalkBack (Android) fully navigate all screens — no unlabeled buttons or inaccessible content
+- [ ] Dynamic Type (iOS) and font scaling (Android) supported — text scales up to 200% without clipping or overlapping
+- [ ] Color contrast meets WCAG AA: 4.5:1 for normal text, 3:1 for large text
+- [ ] Touch targets ≥ 44×44pt (iOS) / 48×48dp (Android) — platform minimum sizes for accessibility
+- [ ] Screen reader announcements for dynamic content changes (new messages, loading states, errors)
+- [ ] Custom gestures have accessible alternatives — swipe-to-delete must have a button alternative
+- [ ] Switch Control (iOS) and Switch Access (Android) can navigate primary flows
 
 ---
 
@@ -110,3 +155,11 @@
 - [ ] Haptic feedback used thoughtfully for key interactions (success, error, selection)
 - [ ] Adaptive icons configured for Android (foreground + background layers for consistent shape across launchers)
 - [ ] iPad / tablet layout optimized if supporting larger screens (not just phone layout stretched)
+- [ ] Staged rollout configured — release to 5% → 25% → 100% of users (Play Console staged rollout / TestFlight phased release)
+- [ ] Crash-free rate target > 99.5% monitored before each rollout expansion
+- [ ] Offline-first architecture: local database syncs with server when connectivity resumes (CRDT or last-write-wins)
+- [ ] Background upload/download with progress tracking — survives app backgrounding (URLSession background task / WorkManager)
+- [ ] App shortcuts configured (iOS: Quick Actions from 3D Touch/Haptic Touch; Android: App Shortcuts)
+- [ ] Share extension or share sheet integration for receiving content from other apps
+- [ ] Wear OS / watchOS companion app if applicable to the use case
+- [ ] App indexing configured — in-app content discoverable via Google Search / Spotlight Search
