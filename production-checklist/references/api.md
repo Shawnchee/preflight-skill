@@ -112,7 +112,6 @@
 - [ ] Automated database backup schedule configured and restore procedure tested at least once (verify backups are not corrupted)
 - [ ] Timeouts configured for all external HTTP calls, database queries, and queue operations (default unlimited timeout = memory leak risk)
 - [ ] Dead letter queues configured for failed async jobs — failed messages are not silently dropped
-- [ ] Idempotency handled for critical mutation endpoints (payments, transfers) — retry-safe with idempotency keys
 - [ ] Bulkhead pattern implemented — failures in non-critical services don't bring down critical paths (isolate thread pools/connection pools)
 - [ ] Graceful degradation configured — if a dependency is down, serve cached/default data instead of failing entirely
 - [ ] Leader election or distributed locking in place for operations that must run on exactly one instance (cron jobs, migrations, queue consumers)
@@ -127,7 +126,6 @@
 - [ ] GDPR compliance: right to access (data export), right to erasure (data deletion), right to portability implemented
 - [ ] CCPA compliance: "Do Not Sell" opt-out mechanism, data disclosure on request, deletion on request
 - [ ] Data classification applied — PII, financial data, health data (PHI) identified and protected with appropriate encryption and access controls
-- [ ] Personally identifiable information (PII) encrypted at rest using AES-256-GCM or platform-managed encryption
 - [ ] Data anonymization or pseudonymization applied to non-production environments — never use real user data in staging/dev
 - [ ] Cross-border data transfer compliance verified — data residency requirements met for EU (GDPR), China (PIPL), etc.
 - [ ] Data backup encryption enabled — backups are encrypted at rest and access-controlled independently from production data
@@ -156,7 +154,6 @@
 - [ ] CORS policy explicitly configured with allowed origins list — never `Access-Control-Allow-Origin: *` on authenticated APIs
 - [ ] Security headers set: `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`
 - [ ] API responses don't leak internal details: no stack traces, no framework version headers, no database error messages in 5xx responses
-- [ ] Sensitive data has retention policies — old data is automatically purged or anonymized per compliance requirements
 - [ ] DAST (Dynamic Application Security Testing) scan run against staging environment — OWASP ZAP or Burp Suite with zero critical findings
 - [ ] Container images scanned for vulnerabilities (Trivy, Snyk Container, Grype) — base images updated to latest patched versions
 - [ ] Least privilege IAM roles for all cloud resources — no wildcards (`*`) in production IAM policies

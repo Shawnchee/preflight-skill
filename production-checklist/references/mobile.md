@@ -131,7 +131,7 @@
 ### Accessibility (a11y)
 
 - [ ] VoiceOver (iOS) and TalkBack (Android) fully navigate all screens — no unlabeled buttons or inaccessible content
-- [ ] Dynamic Type (iOS) and font scaling (Android) supported — text scales up to 200% without clipping or overlapping
+- [ ] Dynamic Type (iOS) and font scaling (Android) supported — text scales up to 200% without clipping or overlapping (iOS: use system text styles; Android: use `sp` units)
 - [ ] Color contrast meets WCAG AA: 4.5:1 for normal text, 3:1 for large text
 - [ ] Touch targets ≥ 44×44pt (iOS) / 48×48dp (Android) — platform minimum sizes for accessibility
 - [ ] Screen reader announcements for dynamic content changes (new messages, loading states, errors)
@@ -145,7 +145,6 @@
 - [ ] App Clip (iOS) or Instant App (Android) configured for lightweight trial experience without full install
 - [ ] Localization for target markets: all user-facing strings externalized in `.strings` / `strings.xml` / ARB files
 - [ ] Dark mode fully supported and tested (iOS: `@Environment(\.colorScheme)`; Android: `isNightMode`)
-- [ ] Dynamic Type / font scaling support (iOS: use system text styles; Android: use `sp` units and test at largest scale)
 - [ ] Home screen widgets configured for quick-glance information (WidgetKit on iOS; AppWidgetProvider on Android)
 - [ ] Store listing A/B experiments set up in Google Play Console (test icon, screenshots, descriptions)
 - [ ] In-app review prompt implemented at a moment of delight, not on first launch (StoreKit `requestReview` / Play In-App Review API)
