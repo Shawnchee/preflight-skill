@@ -1,4 +1,4 @@
-# production-checklist
+# production-checklist v2.1.0
 
 > Ship confidently. An automated production readiness scanner for any codebase.
 
@@ -6,7 +6,7 @@ Run one command. Get a full report. Know exactly what's missing before you deplo
 
 This skill scans your codebase — detects your stack, checks for security issues, missing configs, and best practice violations — and produces a detailed pass/fail report. No manual input needed. It reads your code and tells you what's wrong, with file paths and line numbers.
 
-**784 checklist items** across 6 deployment types. Based on Google SRE, AWS Well-Architected, PCI DSS v4.0, OWASP, and WCAG 2.2.
+**780 checklist items** across 6 deployment types. Based on Google SRE, AWS Well-Architected, PCI DSS v4.0, OWASP, and WCAG 2.2.
 
 ---
 
@@ -53,27 +53,27 @@ The easiest way — works with 45+ coding agents including Claude Code, Cursor, 
 
 ```bash
 # Install to your project (team can use it too)
-npx skills add shawnchee/preflight-skill
+npx skills add Shawnchee/preflight-skill
 
 # Install globally (available in all your projects)
-npx skills add shawnchee/preflight-skill -g
+npx skills add Shawnchee/preflight-skill -g
 
 # Install to a specific agent only
-npx skills add shawnchee/preflight-skill -a claude-code
-npx skills add shawnchee/preflight-skill -a cursor
-npx skills add shawnchee/preflight-skill -a windsurf
+npx skills add Shawnchee/preflight-skill -a claude-code
+npx skills add Shawnchee/preflight-skill -a cursor
+npx skills add Shawnchee/preflight-skill -a windsurf
 
 # Preview what's available before installing
-npx skills add shawnchee/preflight-skill --list
+npx skills add Shawnchee/preflight-skill --list
 
 # CI/CD-friendly (no prompts)
-npx skills add shawnchee/preflight-skill -g -a claude-code -y
+npx skills add Shawnchee/preflight-skill -g -a claude-code -y
 ```
 
 ### Manual install (any agent)
 
 ```bash
-git clone https://github.com/shawnchee/preflight-skill.git
+git clone https://github.com/Shawnchee/preflight-skill.git
 ```
 
 Then copy the `production-checklist/` folder to your agent's skills directory:
@@ -85,6 +85,8 @@ Then copy the `production-checklist/` folder to your agent's skills directory:
 | **Windsurf** | `.windsurf/skills/` | `~/.windsurf/skills/` |
 | **Codex / OpenCode** | `.codex/skills/` | `~/.codex/skills/` |
 | **Gemini CLI** | `.gemini/skills/` | `~/.gemini/skills/` |
+
+> **Note:** Skill directory paths may vary by agent version. Claude Code paths are verified; other agent paths follow the emerging [SKILL.md standard](https://agentskills.io) and may need adjustment.
 
 Example:
 ```bash
@@ -103,6 +105,21 @@ npx skills remove production-checklist
 
 # Manual
 rm -rf .claude/skills/production-checklist
+```
+
+### Version
+
+Current version: **2.1.0** ([changelog](CHANGELOG.md))
+
+### Updating
+
+```bash
+# Via skills.sh
+npx skills update production-checklist
+
+# Manual
+cd preflight-skill && git pull
+cp -r production-checklist/ ~/.claude/skills/production-checklist/
 ```
 
 ---
@@ -141,13 +158,13 @@ The skill auto-detects your stack from the files in your project. You don't need
 | Type | Items | What it checks |
 |------|-------|---------------|
 | **Web / Frontend** | 144 | Security headers, CSP, CORS, HTTPS, XSS, OWASP, auth tokens, Core Web Vitals, SEO, WCAG 2.2 accessibility, i18n, payment frontend (PCI DSS 4.0), GDPR/CCPA |
-| **Mobile (iOS & Android)** | 124 | App Store / Play Store compliance, code signing, certificate pinning, binary security, in-app purchases, subscription lifecycle, crash reporting, accessibility |
-| **Backend API** | 151 | Auth (OAuth/JWT/MFA), injection prevention (SQL, NoSQL, SSRF, XXE), rate limiting, SLOs, distributed tracing, circuit breakers, data compliance, microservices |
+| **Mobile (iOS & Android)** | 123 | App Store / Play Store compliance, code signing, certificate pinning, binary security, in-app purchases, subscription lifecycle, crash reporting, accessibility |
+| **Backend API** | 148 | Auth (OAuth/JWT/MFA), injection prevention (SQL, NoSQL, SSRF, XXE), rate limiting, SLOs, distributed tracing, circuit breakers, data compliance, microservices |
 | **Smart Contract (EVM)** | 108 | Audit readiness, reentrancy, fuzz testing, multi-sig, gas optimization, oracle security, flash loans, MEV, DeFi checks, cross-chain |
 | **Payment & Financial** | 112 | PCI DSS v4.0, tokenization, double-entry bookkeeping, fraud detection, reconciliation, multi-currency, tax, subscriptions, KYC/AML, SOX audit |
 | **Infrastructure & SRE** | 145 | IaC, container security, Kubernetes, IAM, secrets management, disaster recovery (RTO/RPO), capacity planning, chaos engineering, incident management |
 
-**Total: 784 items** — every one is a concrete, verifiable check. No fluff.
+**Total: 780 items** — every one is a concrete, verifiable check. No fluff.
 
 ---
 
@@ -174,7 +191,7 @@ The skill is designed to be token-efficient. Here's what it actually costs:
 | Component | Tokens | Why |
 |-----------|--------|-----|
 | Skill instructions | ~1,400 | Tells the agent what to do |
-| Checklist reference | ~4,000-5,000 | The actual items to check (per type) |
+| Checklist reference | ~3,000-5,000 | The actual items to check (per type) |
 | Code scanning | ~4,000-7,000 | Reading your configs, grepping for patterns |
 | Report output | ~3,000-5,000 | The detailed pass/fail report |
 
@@ -187,8 +204,8 @@ production-checklist/
 ├── SKILL.md              ← Instructions for the agent (what to scan, how to report)
 └── references/
     ├── web.md            ← 144 items: web/frontend checks
-    ├── mobile.md         ← 124 items: iOS & Android checks
-    ├── api.md            ← 151 items: backend API checks
+    ├── mobile.md         ← 123 items: iOS & Android checks
+    ├── api.md            ← 148 items: backend API checks
     ├── smart-contract.md ← 108 items: Solidity/EVM checks
     ├── payment.md        ← 112 items: payment & financial checks
     └── infrastructure.md ← 145 items: infra & SRE checks
@@ -258,9 +275,9 @@ Severity tiers: 🔴 = causes real damage if missed. 🟡 = causes pain within a
 
 | Version | Feature |
 |---------|---------|
-| v2.1 | `nextjs.md` — Next.js-specific checks (ISR, edge runtime, middleware, App Router) |
-| v2.2 | `supabase.md` — Supabase production hardening (RLS policies, backups, connection pooling) |
-| v2.3 | `data-pipeline.md` — ML model and data pipeline deployment checks |
+| v2.2 | `nextjs.md` — Next.js-specific checks (ISR, edge runtime, middleware, App Router) |
+| v2.3 | `supabase.md` — Supabase production hardening (RLS policies, backups, connection pooling) |
+| v2.4 | `data-pipeline.md` — ML model and data pipeline deployment checks |
 | v3.0 | Auto-remediation — agent detects and fixes common issues automatically |
 
 ---
