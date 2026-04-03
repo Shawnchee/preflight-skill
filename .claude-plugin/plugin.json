@@ -1,8 +1,8 @@
 {
   "name": "production-checklist-plugin",
-  "description": "Production readiness scanner for web, mobile, API, smart contract, payment, and infrastructure deployments. 784 checklist items with automated codebase scanning.",
-  "version": "2.0.0",
-  "author": "byshawnchee",
+  "description": "Production readiness scanner for web, mobile, API, smart contract, payment, and infrastructure deployments. 780 checklist items with automated codebase scanning.",
+  "version": "2.1.0",
+  "author": "Shawnchee",
   "license": "MIT",
   "skills": [
     {

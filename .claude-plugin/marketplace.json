@@ -1,16 +1,18 @@
 {
   "metadata": {
     "name": "Production Checklist",
-    "description": "Ship confidently — automated production readiness scanner with 784 items across web, mobile, API, smart contract, payment systems, and infrastructure/SRE.",
-    "author": "byshawnchee",
-    "repository": "https://github.com/byshawnchee/production-checklist-skill"
+    "description": "Ship confidently — automated production readiness scanner with 780 items across web, mobile, API, smart contract, payment systems, and infrastructure/SRE.",
+    "author": "Shawnchee",
+    "repository": "https://github.com/Shawnchee/preflight-skill",
+    "tags": ["production-readiness", "checklist", "security", "deployment", "devops", "sre", "code-review"],
+    "license": "MIT"
   },
   "plugins": [
     {
       "name": "production-checklist-plugin",
       "description": "Scan your codebase for production readiness issues. Auto-detects stack, checks against FAANG-grade checklist, and produces a detailed pass/fail report with fix suggestions.",
       "path": ".",
-      "version": "2.0.0"
+      "version": "2.1.0"
     }
   ]
 }

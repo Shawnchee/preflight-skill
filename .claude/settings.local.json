@@ -1,17 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(*)",
       "Read(*)",
       "Write(*)",
       "Edit(*)",
       "Glob(*)",
-      "Grep(*)",
-      "WebFetch(*)",
-      "WebSearch(*)",
-      "Agent(*)",
-      "NotebookEdit(*)",
-      "mcp__*"
+      "Grep(*)"
     ],
     "deny": []
   }
