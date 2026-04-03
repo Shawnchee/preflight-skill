@@ -21,12 +21,16 @@ Glob the project root. Detect all applicable types from file presence:
 |------------|------|
 | `package.json` with React/Vue/Svelte/Next/Nuxt/Astro, `vite.config.*`, `next.config.*` | `web` |
 | `Podfile`, `*.xcodeproj`, `build.gradle*`, `AndroidManifest.xml`, `pubspec.yaml` | `mobile` |
-| `server.*`, `app.*`, `manage.py`, `go.mod`, `Gemfile`, `pom.xml`, route handlers | `api` |
+| `server.{js,ts}`, `app.{js,ts,py}`, `main.go`, `manage.py`, `go.mod`, `Gemfile`, `pom.xml`, `routes/`, `controllers/` | `api` |
 | `*.sol`, `foundry.toml`, `hardhat.config.*` | `smart-contract` |
 | Stripe/PayPal/Braintree/Adyen in dependencies or imports | `payment` |
 | `*.tf`, `Dockerfile`, `k8s/`, `helm/`, `.github/workflows/*`, `pulumi/` | `infrastructure` |
 
 Tag ALL that apply. Only ask user if truly ambiguous.
+
+**No match?** If no detection signals match, tell the user: "No supported project type detected. Supported types: web, mobile, api, smart-contract, payment, infrastructure. Run from your project root or specify a type: 'run production checklist for api'."
+
+**Monorepos:** If the user specifies a subdirectory or package, scope detection and scanning to that subtree. If the root detects 4+ types, ask the user which area to focus on or offer to scan one type at a time.
 
 ## Step 2 — Load Reference Checklist
 
@@ -53,6 +57,8 @@ Mark each item:
 - ✅ **PASS** — verified from code (cite `file:line`)
 - ❌ **FAIL** — violation found (cite `file:line`) or required thing is missing
 - ⚠️ **MANUAL** — cannot verify from code (DNS, external service config, store listings)
+
+**Secret redaction**: If you discover actual secrets or credentials, truncate them in the report — show only the first 8 characters followed by `...` (e.g., `sk_live_a1b2...`). Never output full secret values.
 
 **Skip items irrelevant to the detected stack.** Filter aggressively — a React SPA doesn't need Kubernetes checks.
 
@@ -110,9 +116,28 @@ Want me to fix these? I can:
 • Show details for any item
 ```
 
+If all critical items pass:
+
+```
+╔══════════════════════════════════════╗
+║            SCORECARD                 ║
+╠══════════════════════════════════════╣
+║ 🔴 Critical:     15/15 passed       ║
+║ 🟡 Important:    23/25 passed       ║
+║ 🟢 Nice-to-have:  6/10 passed      ║
+╠══════════════════════════════════════╣
+║ VERDICT: ✅ READY TO SHIP           ║
+║ No critical blockers found          ║
+╚══════════════════════════════════════╝
+```
+
+**Long reports:** If total findings exceed 50 items, collapse ✅ PASS items into a count summary (e.g., "14 items passed") and only expand ❌ FAIL and ⚠️ MANUAL items in detail. Offer: "Want me to show all items including passes?"
+
 ## Step 5 — Fix on Request
 
 When the user asks to fix items, apply actual code changes using Edit/Write. Be concrete — write the real config, middleware, or dependency addition. Don't just describe what to do.
+
+Always show proposed changes before applying. Never commit automatically — let the user review and commit. Never modify files outside the project directory.
 
 ## Scan Efficiency Rules
 
@@ -122,3 +147,4 @@ When the user asks to fix items, apply actual code changes using Edit/Write. Be 
 4. **Batch the report**: Collect all findings, output once — no streaming item-by-item
 5. **Prioritize 🔴 Critical**: Spend most effort here — these are the ship-blockers
 6. **Cite evidence**: Every PASS/FAIL should reference a file path. This builds trust in the report.
+7. **Exclude noise directories**: Always skip `node_modules/`, `vendor/`, `.git/`, `dist/`, `build/`, `.next/`, `__pycache__/` in all Glob and Grep operations
