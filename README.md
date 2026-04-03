@@ -21,7 +21,7 @@ The skill:  1. Scans your project files to detect the stack
             4. Produces a report:
 
 ╔══════════════════════════════════════╗
-║   PRODUCTION READINESS SCAN REPORT  ║
+║   PRODUCTION READINESS SCAN REPORT   ║
 ╚══════════════════════════════════════╝
 
 🔴 CRITICAL
