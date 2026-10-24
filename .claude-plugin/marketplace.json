@@ -1,18 +1,23 @@
 {
+  "name": "preflight-skill",
+  "owner": {
+    "name": "Shawnchee"
+  },
   "metadata": {
-    "name": "Production Checklist",
-    "description": "Ship confidently — automated production readiness scanner with 780 items across web, mobile, API, smart contract, payment systems, and infrastructure/SRE.",
-    "author": "Shawnchee",
-    "repository": "https://github.com/Shawnchee/preflight-skill",
-    "tags": ["production-readiness", "checklist", "security", "deployment", "devops", "sre", "code-review"],
-    "license": "MIT"
+    "description": "Ship confidently — automated production readiness scanner with 780 items across web, mobile, API, smart contract, payment systems, and infrastructure/SRE."
   },
   "plugins": [
     {
       "name": "production-checklist-plugin",
       "description": "Scan your codebase for production readiness issues. Auto-detects stack, checks against FAANG-grade checklist, and produces a detailed pass/fail report with fix suggestions.",
-      "path": ".",
-      "version": "2.1.0"
+      "source": "./",
+      "version": "2.1.0",
+      "author": {
+        "name": "Shawnchee"
+      },
+      "repository": "https://github.com/Shawnchee/preflight-skill",
+      "license": "MIT",
+      "keywords": ["production-readiness", "checklist", "security", "deployment", "devops", "sre", "code-review"]
     }
   ]
 }
