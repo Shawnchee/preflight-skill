@@ -150,7 +150,7 @@
 - [ ] TLS 1.2+ enforced on all endpoints; TLS 1.0 and 1.1 disabled (check with SSL Labs test)
 - [ ] Sensitive data encrypted at rest: PII, financial data, health data (AES-256-GCM or platform-managed encryption)
 - [ ] SAST (Static Application Security Testing) scan run with zero critical/high findings unresolved (Snyk, Semgrep, CodeQL)
-- [ ] Dependency vulnerabilities audited — no critical CVEs in production dependencies (`npm audit`, `pip audit`, `cargo audit`, `go vuln check`)
+- [ ] Dependency vulnerabilities audited — no critical CVEs in production dependencies (`npm audit`, `pip audit`, `cargo audit`, `govulncheck`)
 - [ ] CORS policy explicitly configured with allowed origins list — never `Access-Control-Allow-Origin: *` on authenticated APIs
 - [ ] Security headers set: `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`
 - [ ] API responses don't leak internal details: no stack traces, no framework version headers, no database error messages in 5xx responses

@@ -11,7 +11,7 @@
 - [ ] If handling card data directly: PCI DSS Level 1 assessment completed by a Qualified Security Assessor (QSA)
 - [ ] PCI DSS v4.0 requirement 6.4.3 satisfied: complete inventory of all scripts on payment pages with documented authorization for each
 - [ ] PCI DSS v4.0 requirement 11.6.1 satisfied: real-time detection and alerting on unauthorized changes to payment page elements (HTML, scripts, iframes)
-- [ ] SAQ (Self-Assessment Questionnaire) completed and filed with your acquiring bank — type depends on integration method (SAQ-A for hosted, SAQ-A-EP for iframes)
+- [ ] SAQ (Self-Assessment Questionnaire) completed and filed with your acquiring bank — type depends on integration method (SAQ A for fully hosted pages or iframes like Stripe Elements; SAQ A-EP when your page's JavaScript directly handles or posts card data)
 - [ ] Cardholder data not stored after authorization — no full PAN, CVV, or magnetic stripe data retained in any system (database, logs, files, backups)
 - [ ] All cardholder data transmission encrypted with TLS 1.2+ — no fallback to older protocols
 - [ ] Tokenization implemented: store payment method tokens from your payment processor, never raw card numbers
@@ -119,7 +119,7 @@
 
 - [ ] Every financial state change logged with: timestamp (UTC), actor (user/system), action, before-state, after-state, IP address
 - [ ] Audit logs are append-only and stored in tamper-evident storage (separate from application database, WORM storage or signed logs)
-- [ ] Audit log retention meets regulatory requirements: 7 years for IRS/SOX, 5 years for PCI DSS, jurisdiction-specific for GDPR
+- [ ] Audit log retention meets regulatory requirements: 7 years for IRS/SOX, at least 12 months for PCI DSS with the last 3 months immediately available (req. 10.5.1), jurisdiction-specific for GDPR
 - [ ] Admin actions on payment data produce audit entries: who accessed what, when, from where
 - [ ] SOX compliance: financial controls documented, access to financial systems reviewed quarterly, segregation of duties enforced (if publicly traded)
 - [ ] PCI DSS audit trail requirements: all access to cardholder data logged, log integrity monitoring in place, logs reviewed daily

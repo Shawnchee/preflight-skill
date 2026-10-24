@@ -13,7 +13,7 @@
 - [ ] All requested permissions have user-facing justification strings (iOS: every `NS...UsageDescription` key in Info.plist; Android: runtime permission rationale)
 - [ ] Only permissions actually used by the app are requested — remove any leftover/unused permission declarations
 - [ ] Demo/test account credentials prepared and entered for App Store reviewers (required if app has login — rejection guaranteed without this)
-- [ ] App Review Guidelines compliance verified: no private/undocumented API usage (iOS), no external payment links for digital goods (both platforms)
+- [ ] App Review Guidelines compliance verified: no private/undocumented API usage (iOS), no external payment links for digital goods unless allowed for that storefront (e.g., US App Store after Epic v. Apple, EU DMA entitlements)
 - [ ] AI/ML transparency disclosure added if app uses generative AI, LLMs, or external AI services (Apple & Google require disclosure)
 - [ ] Login with Apple implemented if app offers any third-party social login (Apple requirement since 2020)
 - [ ] App does not crash on launch or during primary flow — test the exact binary being submitted, not a debug build
@@ -47,7 +47,7 @@
 - [ ] Clipboard cleared after sensitive copy operations (e.g., OTP codes) — `UIPasteboard.general.setItems([], options: [.expirationDate: Date()])`)
 - [ ] Binary is obfuscated — reverse engineering of app logic is not trivially easy (iOS: Swift obfuscation; Android: R8 with proguard-rules)
 - [ ] Deep link handlers validate all parameters — no injection attacks via `myapp://path?param=malicious_value`
-- [ ] WebView content is sandboxed — `WKWebView` with `javaScriptEnabled: false` where not needed, no `evaluateJavaScript` with user input
+- [ ] WebView content is sandboxed — JavaScript disabled where not needed (iOS `WKWebpagePreferences.allowsContentJavaScript = false`; Android `setJavaScriptEnabled(false)`), no `evaluateJavaScript` with user input
 - [ ] Network security config (Android) restricts cleartext traffic and pins certificates for production domains
 
 ---
@@ -78,7 +78,7 @@
 - [ ] App icon: 1024×1024px PNG, no transparency/alpha channel (iOS strict requirement); 512×512px hi-res icon (Android)
 - [ ] Screenshots prepared for all required device sizes (iOS: 6.7", 6.5", 5.5" at minimum; Android: phone + 7" + 10" tablet if supporting)
 - [ ] App preview video prepared — 15-30 seconds showing core value prop (optional but significantly boosts conversion)
-- [ ] App name/title optimized: ≤ 30 chars (Android) / ≤ 50 chars (iOS) — include primary search keyword
+- [ ] App name/title optimized: ≤ 30 chars (both App Store and Play Store limits) — include primary search keyword
 - [ ] Short description ≤ 80 chars (Android) — this is the most-read copy in the Play Store listing
 - [ ] Full description keyword-optimized and clearly explains what the app does in the first 2 lines (most users don't expand)
 - [ ] Content rating questionnaire completed accurately (wrong rating = removal risk)
@@ -103,11 +103,11 @@
 
 ### Compliance & Legal
 
-- [ ] GDPR compliance: App Tracking Transparency (ATT) prompt shown on iOS 14.5+ before any tracking/advertising ID access
+- [ ] App Tracking Transparency (ATT) prompt shown on iOS 14.5+ before any tracking/advertising ID access (Apple requirement; separate from GDPR consent)
 - [ ] CCPA compliance if serving California users: "Do Not Sell My Personal Information" option available if applicable
 - [ ] Google Play Data Safety section filled out accurately (required — app will be flagged without it)
 - [ ] Apple App Privacy nutrition labels filled out in App Store Connect (required — submission blocked without it)
-- [ ] In-app purchases use platform IAP system for digital goods — no links to external payment (Apple/Google policy, enforced)
+- [ ] In-app purchases use platform IAP system for digital goods — external payment links only where the storefront explicitly allows them (Apple/Google policy, enforced)
 - [ ] Account deletion feature available if app offers account creation (Apple hard requirement; Google Play policy)
 - [ ] Children's/COPPA compliance reviewed if app could attract under-13 users (age gate, restricted data collection)
 - [ ] Data retention and deletion policies documented — user data is deletable upon request

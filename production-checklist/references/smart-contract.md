@@ -27,7 +27,7 @@
 
 - [ ] Unit tests cover ALL public and external functions — minimum 95% line coverage, 90% branch coverage
 - [ ] Integration tests cover all cross-contract interactions, including interactions with external protocols
-- [ ] Fuzz testing run with meaningful corpus: Foundry `forge fuzz` (≥ 10,000 runs) or Echidna with custom property tests
+- [ ] Fuzz testing run with meaningful corpus: Foundry fuzz tests via `forge test` (`fuzz.runs` ≥ 10,000) or Echidna with custom property tests
 - [ ] Edge cases explicitly tested: zero value transfers, zero address, max uint256, empty arrays, reentrancy attempts
 - [ ] Fork tests run against live mainnet state to verify integration with deployed contracts (Hardhat fork / Foundry `--fork-url`)
 - [ ] Invariant tests defined and passing: total supply consistency, balance sum = total supply, no unauthorized minting
@@ -60,7 +60,7 @@
 - [ ] OpenZeppelin Contracts library used for standard implementations: ERC-20, ERC-721, ERC-1155, AccessControl, Pausable
 - [ ] No unused variables, imports, dead code, or unreachable branches — clean compilation output
 - [ ] NatSpec documentation (`@notice`, `@param`, `@return`, `@dev`) on all public and external functions
-- [ ] Code compiles with zero warnings — treat warnings as errors in CI (`--warnings-as-errors` in Foundry)
+- [ ] Code compiles with zero warnings — treat warnings as errors in CI (`forge build --deny warnings` or `deny = "warnings"` in `foundry.toml`)
 - [ ] Functions use most restrictive visibility: `external` over `public` when not called internally (gas savings + clarity)
 - [ ] `assembly` / inline Yul blocks minimized and each accompanied by a safety comment explaining why it's necessary
 - [ ] Custom errors used instead of require strings for gas efficiency (`error InsufficientBalance()` instead of `require(balance >= amount, "insufficient")`)
@@ -112,7 +112,7 @@
 - [ ] Sandwich attack resistance verified — user-facing swaps have slippage protection and deadline parameters
 - [ ] Liquidation mechanism tested under extreme market conditions — verify no bad debt accumulates
 - [ ] Interest rate model behavior verified at boundary conditions — 0% utilization, 100% utilization, rate jumps
-- [ ] Token approval patterns safe — use `permit` (EIP-2612) or `increaseAllowance` instead of raw `approve` to prevent front-running
+- [ ] Token approval patterns safe — use `permit` (EIP-2612) or SafeERC20 `forceApprove`/`safeIncreaseAllowance` instead of raw `approve` (`increaseAllowance` was removed from OpenZeppelin Contracts v5) to prevent front-running
 - [ ] Yield calculations verified for precision — no rounding errors that compound over time (use fixed-point math libraries)
 - [ ] Vault share price manipulation prevented — first depositor attack mitigated with virtual shares or minimum deposit
 - [ ] Reward distribution arithmetic verified — accumulated rewards don't overflow, division-before-multiplication errors eliminated

@@ -102,7 +102,7 @@
 - [ ] Tested with at least one screen reader (VoiceOver on Mac, NVDA on Windows) on critical flows
 - [ ] Skip navigation link provided for keyboard users (`Skip to main content`)
 - [ ] Animations respect `prefers-reduced-motion` media query
-- [ ] Touch targets ≥ 44×44px on mobile — WCAG 2.2 Target Size criterion (2.5.8)
+- [ ] Touch targets ≥ 24×24 CSS px minimum — WCAG 2.2 Target Size (Minimum) criterion 2.5.8 (aim for 44×44px per 2.5.5 Enhanced on mobile)
 - [ ] Error messages programmatically associated with form fields using `aria-describedby` or `aria-errormessage`
 - [ ] Dynamic content updates announced to screen readers via `aria-live` regions (toasts, notifications, form errors)
 - [ ] Drag-and-drop interactions have keyboard-accessible alternatives
