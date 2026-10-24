@@ -29,7 +29,7 @@
 - [ ] Version number (`CFBundleShortVersionString` / `versionName`) and build number (`CFBundleVersion` / `versionCode`) incremented from last submission
 - [ ] Release build tested on physical devices — not just emulator/simulator (test on oldest supported device you own)
 - [ ] ProGuard / R8 code shrinking enabled for Android release builds (minifyEnabled true) — test that obfuscation doesn't break reflection/serialization
-- [ ] Bitcode, dSYM, or debug symbols uploaded for crash symbolication (or configured to auto-upload via Crashlytics/Sentry)
+- [ ] dSYM files (iOS) and R8/ProGuard mapping files (Android) uploaded for crash symbolication (or configured to auto-upload via Crashlytics/Sentry)
 - [ ] CI/CD pipeline builds, signs, and distributes the release binary — no manual builds from developer machines
 - [ ] Build reproducibility verified — same commit produces same binary (pin dependency versions, lock files committed)
 
@@ -76,7 +76,7 @@
 ### Store Listing & ASO (App Store Optimization)
 
 - [ ] App icon: 1024×1024px PNG, no transparency/alpha channel (iOS strict requirement); 512×512px hi-res icon (Android)
-- [ ] Screenshots prepared for all required device sizes (iOS: 6.7", 6.5", 5.5" at minimum; Android: phone + 7" + 10" tablet if supporting)
+- [ ] Screenshots prepared for all required device sizes (iOS: 6.9" or 6.5" iPhone, 13" iPad if supporting iPad; Android: phone + 7" + 10" tablet if supporting)
 - [ ] App preview video prepared — 15-30 seconds showing core value prop (optional but significantly boosts conversion)
 - [ ] App name/title optimized: ≤ 30 chars (both App Store and Play Store limits) — include primary search keyword
 - [ ] Short description ≤ 80 chars (Android) — this is the most-read copy in the Play Store listing
@@ -142,7 +142,7 @@
 
 ## 🟢 NICE-TO-HAVE (polish)
 
-- [ ] App Clip (iOS) or Instant App (Android) configured for lightweight trial experience without full install
+- [ ] App Clip (iOS) configured for lightweight trial experience without full install (Android Instant Apps were discontinued in December 2025)
 - [ ] Localization for target markets: all user-facing strings externalized in `.strings` / `strings.xml` / ARB files
 - [ ] Dark mode fully supported and tested (iOS: `@Environment(\.colorScheme)`; Android: `isNightMode`)
 - [ ] Home screen widgets configured for quick-glance information (WidgetKit on iOS; AppWidgetProvider on Android)

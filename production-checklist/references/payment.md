@@ -96,7 +96,7 @@
 - [ ] Tax amounts recorded as separate line items in ledger — never mixed with product revenue
 - [ ] Tax ID / VAT number collection and validation for B2B transactions (EU VAT reverse charge, GST for India/Australia)
 - [ ] Invoice generation automated: valid tax invoice with all required fields (seller info, buyer info, tax breakdown, invoice number)
-- [ ] Digital services tax compliance for cross-border digital sales (EU MOSS/OSS, UK digital services, Australian GST)
+- [ ] Digital services tax compliance for cross-border digital sales (EU OSS, UK digital services, Australian GST)
 - [ ] Receipt emitted for every successful transaction — sent via email and available in user dashboard
 - [ ] KYC (Know Your Customer) verification integrated for payment amounts above regulatory thresholds
 - [ ] AML (Anti-Money Laundering) screening: transactions screened against sanctions lists and suspicious activity reported per FinCEN/local regulations

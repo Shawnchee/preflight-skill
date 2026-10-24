@@ -121,7 +121,7 @@
 
 - [ ] Client-side error tracking configured and verified — errors flow to dashboard (Sentry, Datadog RUM, LogRocket)
 - [ ] Analytics installed and tracking key events: page views, signups, conversions (GA4, PostHog, Plausible, Mixpanel)
-- [ ] Uptime monitoring set up — alerts on downtime (Better Uptime, Freshping, UptimeRobot, Checkly)
+- [ ] Uptime monitoring set up — alerts on downtime (Better Stack, UptimeRobot, Checkly)
 - [ ] Real User Monitoring (RUM) enabled to track actual user Core Web Vitals (Vercel Analytics, Datadog RUM, SpeedCurve)
 - [ ] Alerts configured for error rate spikes (e.g., > 5% error rate triggers PagerDuty/Slack notification)
 - [ ] CSP violation reporting enabled — `report-uri` or `report-to` directive sends violations to a monitoring endpoint

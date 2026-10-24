@@ -9,7 +9,7 @@
 - [ ] Third-party security audit completed by a reputable firm (Trail of Bits, OpenZeppelin, Cyfrin, Sherlock, Spearbit, Consensys Diligence)
 - [ ] All Critical and High severity audit findings resolved and re-verified before mainnet deployment
 - [ ] Slither static analysis run — all findings reviewed, false positives documented, real issues fixed
-- [ ] Mythril or MythX deep analysis run — no unresolved critical findings
+- [ ] Mythril symbolic analysis run — no unresolved critical findings (MythX was sunset; use Mythril directly or Diligence Fuzzing)
 - [ ] Reentrancy protection verified: follow Checks-Effects-Interactions pattern AND use `ReentrancyGuard` on all external call paths
 - [ ] No unchecked arithmetic in critical calculations (Solidity < 0.8.x: use SafeMath everywhere; ≥ 0.8.x: verify `unchecked` blocks are safe)
 - [ ] Access control verified on ALL privileged functions — no unprotected `onlyOwner`/admin functions (use OpenZeppelin `Ownable2Step` or `AccessControl`)
@@ -132,8 +132,8 @@
 
 - [ ] Formal verification run for invariant-critical logic (Certora Prover, Halmos, KEVM) — especially for DeFi core accounting
 - [ ] Source code verified on Etherscan/Basescan AND Sourcify immediately after deployment
-- [ ] Subgraph deployed for efficient off-chain indexing and querying (The Graph — hosted or decentralized)
-- [ ] Real-time monitoring configured for anomalous on-chain activity: large transfers, admin function calls, unusual patterns (OpenZeppelin Defender, Forta, Tenderly)
+- [ ] Subgraph deployed for efficient off-chain indexing and querying (The Graph Network, Goldsky, or Ponder)
+- [ ] Real-time monitoring configured for anomalous on-chain activity: large transfers, admin function calls, unusual patterns (OpenZeppelin Monitor, Forta, Tenderly, Hypernative)
 - [ ] Token distribution / vesting contracts audited separately from core protocol (different risk profile)
 - [ ] DAO governance contracts reviewed for vote manipulation: flash loan governance attacks, vote buying, low-quorum exploits
 - [ ] Cross-chain bridge contracts receive independent bridge-specific security review (bridges are highest-risk category)
