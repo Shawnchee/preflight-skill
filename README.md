@@ -70,6 +70,13 @@ npx skills add Shawnchee/preflight-skill --list
 npx skills add Shawnchee/preflight-skill -g -a claude-code -y
 ```
 
+### Claude Code plugin
+
+```bash
+/plugin marketplace add Shawnchee/preflight-skill
+/plugin install production-checklist-plugin@preflight-skill
+```
+
 ### Manual install (any agent)
 
 ```bash
@@ -119,7 +126,7 @@ npx skills update production-checklist
 
 # Manual
 cd preflight-skill && git pull
-cp -r production-checklist/ ~/.claude/skills/production-checklist/
+cp -r production-checklist ~/.claude/skills/
 ```
 
 ---

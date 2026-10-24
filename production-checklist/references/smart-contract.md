@@ -9,7 +9,7 @@
 - [ ] Third-party security audit completed by a reputable firm (Trail of Bits, OpenZeppelin, Cyfrin, Sherlock, Spearbit, Consensys Diligence)
 - [ ] All Critical and High severity audit findings resolved and re-verified before mainnet deployment
 - [ ] Slither static analysis run — all findings reviewed, false positives documented, real issues fixed
-- [ ] Mythril or MythX deep analysis run — no unresolved critical findings
+- [ ] Mythril symbolic analysis run — no unresolved critical findings (MythX was sunset; use Mythril directly or Diligence Fuzzing)
 - [ ] Reentrancy protection verified: follow Checks-Effects-Interactions pattern AND use `ReentrancyGuard` on all external call paths
 - [ ] No unchecked arithmetic in critical calculations (Solidity < 0.8.x: use SafeMath everywhere; ≥ 0.8.x: verify `unchecked` blocks are safe)
 - [ ] Access control verified on ALL privileged functions — no unprotected `onlyOwner`/admin functions (use OpenZeppelin `Ownable2Step` or `AccessControl`)
@@ -27,7 +27,7 @@
 
 - [ ] Unit tests cover ALL public and external functions — minimum 95% line coverage, 90% branch coverage
 - [ ] Integration tests cover all cross-contract interactions, including interactions with external protocols
-- [ ] Fuzz testing run with meaningful corpus: Foundry `forge fuzz` (≥ 10,000 runs) or Echidna with custom property tests
+- [ ] Fuzz testing run with meaningful corpus: Foundry fuzz tests via `forge test` (`fuzz.runs` ≥ 10,000) or Echidna with custom property tests
 - [ ] Edge cases explicitly tested: zero value transfers, zero address, max uint256, empty arrays, reentrancy attempts
 - [ ] Fork tests run against live mainnet state to verify integration with deployed contracts (Hardhat fork / Foundry `--fork-url`)
 - [ ] Invariant tests defined and passing: total supply consistency, balance sum = total supply, no unauthorized minting
@@ -60,7 +60,7 @@
 - [ ] OpenZeppelin Contracts library used for standard implementations: ERC-20, ERC-721, ERC-1155, AccessControl, Pausable
 - [ ] No unused variables, imports, dead code, or unreachable branches — clean compilation output
 - [ ] NatSpec documentation (`@notice`, `@param`, `@return`, `@dev`) on all public and external functions
-- [ ] Code compiles with zero warnings — treat warnings as errors in CI (`--warnings-as-errors` in Foundry)
+- [ ] Code compiles with zero warnings — treat warnings as errors in CI (`forge build --deny warnings` or `deny = "warnings"` in `foundry.toml`)
 - [ ] Functions use most restrictive visibility: `external` over `public` when not called internally (gas savings + clarity)
 - [ ] `assembly` / inline Yul blocks minimized and each accompanied by a safety comment explaining why it's necessary
 - [ ] Custom errors used instead of require strings for gas efficiency (`error InsufficientBalance()` instead of `require(balance >= amount, "insufficient")`)
@@ -112,7 +112,7 @@
 - [ ] Sandwich attack resistance verified — user-facing swaps have slippage protection and deadline parameters
 - [ ] Liquidation mechanism tested under extreme market conditions — verify no bad debt accumulates
 - [ ] Interest rate model behavior verified at boundary conditions — 0% utilization, 100% utilization, rate jumps
-- [ ] Token approval patterns safe — use `permit` (EIP-2612) or `increaseAllowance` instead of raw `approve` to prevent front-running
+- [ ] Token approval patterns safe — use `permit` (EIP-2612) or SafeERC20 `forceApprove`/`safeIncreaseAllowance` instead of raw `approve` (`increaseAllowance` was removed from OpenZeppelin Contracts v5) to prevent front-running
 - [ ] Yield calculations verified for precision — no rounding errors that compound over time (use fixed-point math libraries)
 - [ ] Vault share price manipulation prevented — first depositor attack mitigated with virtual shares or minimum deposit
 - [ ] Reward distribution arithmetic verified — accumulated rewards don't overflow, division-before-multiplication errors eliminated
@@ -132,8 +132,8 @@
 
 - [ ] Formal verification run for invariant-critical logic (Certora Prover, Halmos, KEVM) — especially for DeFi core accounting
 - [ ] Source code verified on Etherscan/Basescan AND Sourcify immediately after deployment
-- [ ] Subgraph deployed for efficient off-chain indexing and querying (The Graph — hosted or decentralized)
-- [ ] Real-time monitoring configured for anomalous on-chain activity: large transfers, admin function calls, unusual patterns (OpenZeppelin Defender, Forta, Tenderly)
+- [ ] Subgraph deployed for efficient off-chain indexing and querying (The Graph Network, Goldsky, or Ponder)
+- [ ] Real-time monitoring configured for anomalous on-chain activity: large transfers, admin function calls, unusual patterns (OpenZeppelin Monitor, Forta, Tenderly, Hypernative)
 - [ ] Token distribution / vesting contracts audited separately from core protocol (different risk profile)
 - [ ] DAO governance contracts reviewed for vote manipulation: flash loan governance attacks, vote buying, low-quorum exploits
 - [ ] Cross-chain bridge contracts receive independent bridge-specific security review (bridges are highest-risk category)

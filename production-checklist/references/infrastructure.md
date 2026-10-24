@@ -7,7 +7,7 @@
 ### Infrastructure as Code (IaC)
 
 - [ ] All infrastructure defined in code — Terraform, Pulumi, CloudFormation, or CDK (no manual console-created resources in production)
-- [ ] IaC state stored remotely with locking (Terraform: S3 + DynamoDB lock; Pulumi: Pulumi Cloud or S3 backend)
+- [ ] IaC state stored remotely with locking (Terraform: S3 backend with `use_lockfile = true` — DynamoDB locking is deprecated; Pulumi: Pulumi Cloud or S3 backend)
 - [ ] Infrastructure CI/CD pipeline: `plan` on PR, `apply` on merge to main — no `terraform apply` from developer laptops
 - [ ] Drift detection automated — alert when actual infrastructure deviates from IaC state (scheduled `terraform plan` or CloudFormation drift detection)
 - [ ] IaC modules versioned and pinned — no `latest` tags or unpinned module sources in production
@@ -49,7 +49,7 @@
 - [ ] Service accounts / instance roles used for machine-to-machine auth — no long-lived access keys
 - [ ] IAM access reviewed quarterly: remove stale users, reduce over-provisioned permissions
 - [ ] Break-glass procedure documented: emergency access path when normal auth is unavailable (documented, audited, alarmed)
-- [ ] SSO enforced for all team access to cloud console and internal tools (Okta, Azure AD, Google Workspace)
+- [ ] SSO enforced for all team access to cloud console and internal tools (Okta, Microsoft Entra ID, Google Workspace)
 - [ ] Cloud API audit logging enabled and monitored (AWS CloudTrail, GCP Audit Logs, Azure Activity Log) — alert on suspicious activity
 - [ ] Temporary credentials used wherever possible — AWS STS AssumeRole, GCP Workload Identity, Azure Managed Identity
 

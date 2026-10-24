@@ -2,12 +2,11 @@
   "name": "production-checklist-plugin",
   "description": "Production readiness scanner for web, mobile, API, smart contract, payment, and infrastructure deployments. 780 checklist items with automated codebase scanning.",
   "version": "2.1.0",
-  "author": "Shawnchee",
+  "author": {
+    "name": "Shawnchee"
+  },
+  "repository": "https://github.com/Shawnchee/preflight-skill",
   "license": "MIT",
-  "skills": [
-    {
-      "name": "production-checklist",
-      "path": "production-checklist"
-    }
-  ]
+  "keywords": ["production-readiness", "checklist", "security", "deployment", "devops", "sre", "code-review"],
+  "skills": ["./production-checklist"]
 }
